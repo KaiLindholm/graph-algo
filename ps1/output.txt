@@ -1,0 +1,60 @@
+---------------------------------------------
+Elapsed time for n = 1:
+	bunnyHopBrute: 5.9604644775390625e-06 seconds
+	BunnyHopBackTrace: 6.198883056640625e-06 seconds
+	bunnyHopBackTraceOptimized: 1.9073486328125e-06 seconds
+brute_count = 1, backtrace_v1 = 1, backtrace_v2 = 1
+---------------------------------------------
+Elapsed time for n = 2:
+	bunnyHopBrute: 7.152557373046875e-06 seconds
+	BunnyHopBackTrace: 1.0013580322265625e-05 seconds
+	bunnyHopBackTraceOptimized: 2.86102294921875e-06 seconds
+brute_count = 2, backtrace_v1 = 2, backtrace_v2 = 2
+---------------------------------------------
+Elapsed time for n = 3:
+	bunnyHopBrute: 2.193450927734375e-05 seconds
+	BunnyHopBackTrace: 3.409385681152344e-05 seconds
+	bunnyHopBackTraceOptimized: 7.867813110351562e-06 seconds
+brute_count = 5, backtrace_v1 = 5, backtrace_v2 = 5
+---------------------------------------------
+Elapsed time for n = 4:
+	bunnyHopBrute: 0.00015592575073242188 seconds
+	BunnyHopBackTrace: 0.0001289844512939453 seconds
+	bunnyHopBackTraceOptimized: 2.7179718017578125e-05 seconds
+brute_count = 14, backtrace_v1 = 14, backtrace_v2 = 14
+---------------------------------------------
+Elapsed time for n = 5:
+	bunnyHopBrute: 0.00043487548828125 seconds
+	BunnyHopBackTrace: 0.0004951953887939453 seconds
+	bunnyHopBackTraceOptimized: 9.274482727050781e-05 seconds
+brute_count = 42, backtrace_v1 = 42, backtrace_v2 = 42
+---------------------------------------------
+Elapsed time for n = 6:
+	bunnyHopBrute: 0.002151966094970703 seconds
+	BunnyHopBackTrace: 0.001964092254638672 seconds
+	bunnyHopBackTraceOptimized: 0.00030994415283203125 seconds
+brute_count = 132, backtrace_v1 = 132, backtrace_v2 = 132
+---------------------------------------------
+Elapsed time for n = 7:
+	bunnyHopBrute: 0.008810997009277344 seconds
+	BunnyHopBackTrace: 0.007441282272338867 seconds
+	bunnyHopBackTraceOptimized: 0.0010421276092529297 seconds
+brute_count = 429, backtrace_v1 = 429, backtrace_v2 = 429
+---------------------------------------------
+Elapsed time for n = 8:
+	bunnyHopBrute: 0.0376439094543457 seconds
+	BunnyHopBackTrace: 0.027666330337524414 seconds
+	bunnyHopBackTraceOptimized: 0.0035648345947265625 seconds
+brute_count = 1430, backtrace_v1 = 1430, backtrace_v2 = 1430
+---------------------------------------------
+Elapsed time for n = 9:
+	bunnyHopBrute: 0.22278404235839844 seconds
+	BunnyHopBackTrace: 0.11471676826477051 seconds
+	bunnyHopBackTraceOptimized: 0.014030933380126953 seconds
+brute_count = 4862, backtrace_v1 = 4862, backtrace_v2 = 4862
+---------------------------------------------
+Elapsed time for n = 10:
+	bunnyHopBrute: 1.192368984222412 seconds
+	BunnyHopBackTrace: 0.45977330207824707 seconds
+	bunnyHopBackTraceOptimized: 0.05411791801452637 seconds
+brute_count = 16796, backtrace_v1 = 16796, backtrace_v2 = 16796

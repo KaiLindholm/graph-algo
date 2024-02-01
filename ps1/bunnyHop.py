@@ -74,21 +74,30 @@ def bunnyHopBackTrace(n):
 
 def bunnyHopBackTraceOptimized(n):
     n = 2 * n
-
-    def backtrack(path, count, actualPaths, balance):
-        if len(path) == n:
-            if path[0] == UP and path[-1] == DOWN and balance == 0:
+    """
+        The idea is to ensure the balance of UP and DOWN hops
+        Once we build a full path, we can then add it to the list of actual paths if the balance is 0
+    """
+    def validPath(path, count, actualPaths, balance):
+        if len(path) == n: 
+            if balance == 0: 
                 count[0] += 1
                 actualPaths.append([path.copy(), balance])
             return
-
-        if balance > 0:  # if we can add a DOWN
+        """
+            If the balance is greater than 0, we can add a DOWN hop
+        """
+        if balance > 0:
             path.append(DOWN)
-            backtrack(path, count, actualPaths, balance - 1)
+            validPath(path, count, actualPaths, balance - 1)
             path.pop()
 
+        """ 
+            If we are able to add an UP hop, we can add it to the path
+            and again check if its a valid path
+        """
         path.append(UP)
-        backtrack(path, count, actualPaths, balance + 1)
+        validPath(path, count, actualPaths, balance + 1)
         path.pop()
 
     UP = 1
@@ -99,7 +108,7 @@ def bunnyHopBackTraceOptimized(n):
     if n == 0:
         return 0, []
 
-    backtrack([], count, actualPaths, 0)
+    validPath([], count, actualPaths, 0)
     return count[0], actualPaths
 
 def printPaths(paths):
@@ -143,9 +152,9 @@ if __name__ == '__main__':
             testBunnyHop(int(sys.argv[2]))
     else: 
         start_time = time.time()
-        count, paths = bunnyHopBrute(int(sys.argv[1]))
+        count, paths = bunnyHopBackTraceOptimized(int(sys.argv[1]))
         elapsed_time = time.time() - start_time
         print(f'n = {sys.argv[1]} | Number of paths: {count}')
         print(f'Elapsed time: {elapsed_time} seconds\n')
-        printPaths(paths)
-        # printPathsBalance(paths)
+        # printPaths(paths)
+        printPathsBalance(paths)
