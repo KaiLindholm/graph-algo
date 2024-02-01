@@ -72,6 +72,11 @@ def bunnyHopBackTrace(n):
     backtrack([], count, actualPaths, 0, 0)
     return count[0], actualPaths
 
+
+"""
+    Given that there are two options that can come from a given state, and the path length is k = 2n
+    The runtime complexity of this solution is O(2^k) = O(2^(2n)
+"""
 def bunnyHopBackTraceOptimized(n):
     n = 2 * n
     """
@@ -79,7 +84,7 @@ def bunnyHopBackTraceOptimized(n):
         Once we build a full path, we can then add it to the list of actual paths if the balance is 0
     """
     def validPath(path, count, actualPaths, balance):
-        if len(path) == n: 
+        if len(path) == n:  # Base case: if the path is complete
             if balance == 0: 
                 count[0] += 1
                 actualPaths.append([path.copy(), balance])
@@ -87,6 +92,7 @@ def bunnyHopBackTraceOptimized(n):
         """
             If the balance is greater than 0, we can add a DOWN hop
         """
+        
         if balance > 0:
             path.append(DOWN)
             validPath(path, count, actualPaths, balance - 1)
@@ -100,11 +106,11 @@ def bunnyHopBackTraceOptimized(n):
         validPath(path, count, actualPaths, balance + 1)
         path.pop()
 
+
     UP = 1
     DOWN = -1
     count = [0]
     actualPaths = []
-
     if n == 0:
         return 0, []
 
@@ -119,8 +125,8 @@ def printPaths(paths):
 def printPathsBalance(paths):
     # change 1 to U and -1 to D
     for path in paths:
-        print(''.join(['U' if i == 1 else 'D' for i in path[0]]), end = ' ')
-        print(f'Balance: {path[1]}')
+        print(''.join(['U' if i == 1 else 'D' for i in path[0]]))
+        # print(f'Balance: {path[1]}')
         
 def testBunnyHop(n):
     for i in range(1, n+1):
@@ -133,7 +139,7 @@ def testBunnyHop(n):
         backtrace_elapsed_time = time.time() - start_time
         
         start_time = time.time()
-        count2, _ = bunnyHopBackTraceOptimized(i)
+        count2, _, memo = bunnyHopBackTraceOptimized(i)
         optimized_elapsed_time = time.time() - start_time
         print('---------------------------------------------')
         
@@ -143,7 +149,7 @@ def testBunnyHop(n):
         print(f'\tbunnyHopBackTraceOptimized: {optimized_elapsed_time} seconds')
 
         print(f'brute_count = {count}, backtrace_v1 = {count1}, backtrace_v2 = {count2}')
-
+        
 if __name__ == '__main__':
     if sys.argv[1] == 'test':
         if not int(sys.argv[2]):
@@ -152,9 +158,10 @@ if __name__ == '__main__':
             testBunnyHop(int(sys.argv[2]))
     else: 
         start_time = time.time()
-        count, paths = bunnyHopBackTraceOptimized(int(sys.argv[1]))
+        count, paths= bunnyHopBackTraceOptimized(int(sys.argv[1]))
         elapsed_time = time.time() - start_time
         print(f'n = {sys.argv[1]} | Number of paths: {count}')
         print(f'Elapsed time: {elapsed_time} seconds\n')
         # printPaths(paths)
         printPathsBalance(paths)
+        

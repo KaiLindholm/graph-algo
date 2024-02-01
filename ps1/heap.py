@@ -1,126 +1,94 @@
-   
+"""
+    A MinHeap represented as a list 
+"""
+import sys
 class Heap: 
-    def __init__(self):
-        self.heap = []
+    def __init__(self, lst): 
+        self.lst = lst
+        self.heapify()
         
-    def __init__(self, lst):
-        self.heap = []
-        self.buildHeap(lst.copy())
-    
-    def buildHeap(self, lst):
-        self.heap = lst
-        for i in range(len(self.heap)//2, -1, -1):
-            self.heapifyDown(i)
+    def swap(self, i, j): 
+        heap = self.lst
+        heap[i], heap[j] = heap[j], heap[i]
+        
+    def heapify(self): 
+        for i in range(len(self.lst)//2, -1, -1): 
+            self.sift_down(i)
 
-
-    def insert(self, value):
-        self.heap.append(value)
-        self.heapifyUp(len(self.heap)-1)
+    def sift_down(self, index, end=None):
+        
+        if end is None:
+            end = len(self.lst)
             
-    def removeRoot(self):
-        if len(self.heap) == 0:
-            return None
+        heap = self.lst
         
-        minVal = self.heap[0]
-        self.heap[0] = self.heap[-1]
-        self.heap.pop()
-        self.heapifyDown(0)
-        
-        return minVal
-    
-    def getLeftChild(self, index):  
-        return 2*index + 1
-    
-    def getRightChild(self, index):
-        return 2*index + 2
-    
-    def swap(self, i, j):
-        self.heap[i], self.heap[j] = self.heap[j], self.heap[i]
-        
-    def __str__(self):
-        return str(self.heap)
-    
-    def __len__(self):
-        return len(self.heap)
-        
-    def __getitem__(self, index):
-        return self.heap[index]
-    
-class MinHeap(Heap):            
-    def heapifyDown(self, index):
-        while index < len(self.heap):
-            left = self.getLeftChild(index)
-            right = self.getRightChild(index)
-            smallest = index
-            if left < len(self.heap) and self.heap[left] < self.heap[smallest]:
-                smallest = left
-            if right < len(self.heap) and self.heap[right] < self.heap[smallest]:
-                smallest = right
-            if smallest != index:
-                self.swap(index, smallest)
+        left_child_index = 2 * index + 1
+        smallest = index
+
+        while left_child_index < end:
+            right_child_index = left_child_index + 1
+
+            if right_child_index < end and heap[right_child_index] > heap[left_child_index]:
+                smallest = right_child_index
+            else:
+                smallest = left_child_index
+
+            if heap[smallest] > heap[index]:
+                heap[index], heap[smallest] = heap[smallest], heap[index]
                 index = smallest
-            else:
-                break
-    
-    def heapifyUp(self, index):
-        while index > 0:
-            parent = (index-1) // 2
-            if self.heap[index] < self.heap[parent]:
-                self.swap(index, parent)
-                index = parent
+                left_child_index = 2 * index + 1
             else:
                 break
             
-class MaxHeap(Heap): 
-    def heapifyDown(self, index):
-        while index < len(self.heap):
-            left = self.getLeftChild(index)
-            right = self.getRightChild(index)
-            largest = index
-            if left < len(self.heap) and self.heap[left] > self.heap[largest]:
-                largest = left
-            if right < len(self.heap) and self.heap[right] > self.heap[largest]:
-                largest = right
-            if largest != index:
-                self.swap(index, largest)
-                index = largest
-            else:
-                break
+    def sift_up(self, i): 
+        while i > 0 and self.lst[i] > self.lst[self.get_parent(i)]: 
+            self.swap(i, self.get_parent(i))
+            i = self.get_parent(i)
     
-    def heapifyUp(self, index):
-        while index > 0:
-            parent = (index-1) // 2
-            if self.heap[index] > self.heap[parent]:
-                self.swap(index, parent)
-                index = parent
-            else:
-                break
+    def heap_sort(self): 
+        heap = self.lst
+        for i in range(len(heap)-1, 0, -1): 
+            heap[0], heap[i] = heap[i], heap[0]
+            self.sift_down(0, i)
             
-def heapSort(lst, reverse=False):
-    if reverse:
-        heap = MinHeap(lst)
-    else:
-        heap = MaxHeap(lst)
+        return heap
+    
+def output(output_list, sorted_list):
+    with open(output_list, 'w') as file:
+        for item in sorted_list:
+            file.write(f'{item}\n')
+            
+"""
+    If the script is run with no arguments, a random list of 10 integers is generated and sorted.
+    
+    else  the script requires an input text file with vertically aligned numbers, 
+    and an output file to write the sorted list to.
+"""
+if __name__ == "__main__":
+    if len(sys.argv) == 1:
+        import random 
+        lst = [random.randint(0, 100) for _ in range(10)]
+        print(f'Input list: {lst}')
+        heap = Heap(lst)
+        print(f'Heap: {heap.lst}')
+        sorted_list = heap.heap_sort()
+        print(f'Sorted list: {sorted_list}')
+        output('output.txt', sorted_list)
+
+        sys.exit(0)
         
-    sortedList = []
-    for _ in range(len(heap)):
-        sortedList.append(heap.removeRoot())
-    return sortedList
-
-if __name__ == '__main__':
-    lst = [1, 2, 3, 4, 5, 6, 7]
-    minHeap = MinHeap(lst)
-    print(minHeap)
-    minHeap.removeRoot()
-    print(minHeap)
-    maxHeap = MaxHeap(lst)
-    print(maxHeap)
-    maxHeap.removeRoot()
-    print(maxHeap)
-    import random
-
-    random_numbers = [random.randint(1, 100) for _ in range(10)]
-
-    print(random_numbers)
-    print(heapSort(random_numbers, True))
+    if len(sys.argv) != 3: 
+        print('Usage: python heap.py <input_list> <output_list>')
+        sys.exit(1)
+        
+    input_list = sys.argv[1]
+    output_list = sys.argv[2]
     
+    with open (input_list, 'r') as file:
+        lst = [int(line.strip()) for line in file]
+        
+    print(f'Input list: {lst}')
+    heap = Heap(lst)
+    sorted_list = heap.heap_sort()
+    print(f'Sorted list: {sorted_list}')
+    output(output_list, sorted_list)
