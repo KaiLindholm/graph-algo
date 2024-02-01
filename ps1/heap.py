@@ -28,30 +28,37 @@ class Heap:
         while left_child_index < end:
             right_child_index = left_child_index + 1
 
-            if right_child_index < end and heap[right_child_index] > heap[left_child_index]:
+            if right_child_index < end and heap[right_child_index] < heap[left_child_index]:
                 smallest = right_child_index
             else:
                 smallest = left_child_index
 
-            if heap[smallest] > heap[index]:
+            if heap[smallest] < heap[index]:
                 heap[index], heap[smallest] = heap[smallest], heap[index]
                 index = smallest
                 left_child_index = 2 * index + 1
             else:
                 break
             
+    def deleteMin(self):
+        heap = self.lst
+        if len(heap) == 0:
+            return None
+        if len(heap) == 1:
+            return heap.pop()
+        min = heap[0]
+        heap[0] = heap.pop()
+        self.sift_down(0)
+        
+        return min
+
     def sift_up(self, i): 
         while i > 0 and self.lst[i] > self.lst[self.get_parent(i)]: 
             self.swap(i, self.get_parent(i))
             i = self.get_parent(i)
     
     def heap_sort(self): 
-        heap = self.lst
-        for i in range(len(heap)-1, 0, -1): 
-            heap[0], heap[i] = heap[i], heap[0]
-            self.sift_down(0, i)
-            
-        return heap
+        return [self.deleteMin() for _ in range(len(self.lst))]
     
 def output(output_list, sorted_list):
     with open(output_list, 'w') as file:
