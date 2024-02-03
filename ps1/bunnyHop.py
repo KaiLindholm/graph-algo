@@ -5,7 +5,7 @@ has an optimize path validation function
 
 import sys
 import time
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 
 # find all paths that start with a 1, and end with a 0, and have equal number of 0s and 1s
 # at any given time point if the number of 1s must be greater than or equal to the number of 0s
@@ -157,29 +157,29 @@ def bunnyHopv3(n):
 """
 Plots the time taken for each algorithm
 """
-def plotBunnyHop(times):
-    for algo, time in times.items():
-        if time:
-            plt.plot(time, label=algo)
+# def plotBunnyHop(times):
+#     for algo, time in times.items():
+#         if time:
+#             plt.plot(time, label=algo)
         
-    plt.xlabel('n')
-    plt.ylabel('Time')
-    plt.title('Bunny Hop')
-    plt.legend()
-    plt.savefig('bunnyHop.png')
-    plt.close()
+#     plt.xlabel('n')
+#     plt.ylabel('Time')
+#     plt.title('Bunny Hop')
+#     plt.legend()
+#     plt.savefig('bunnyHop.png')
+#     plt.close()
     
 """
 Plots the growth of the number of paths as n increases
 """
-def plotBunnyHopPathCount(count):
-    plt.plot(count)
+# def plotBunnyHopPathCount(count):
+#     plt.plot(count)
 
-    plt.xlabel('n')
-    plt.ylabel('Path Count')
-    plt.title('Bunny Hop')
-    plt.savefig('bunnyHopPathCount.png')
-    plt.close()
+#     plt.xlabel('n')
+#     plt.ylabel('Path Count')
+#     plt.title('Bunny Hop')
+#     plt.savefig('bunnyHopPathCount.png')
+#     plt.close()
 """
 Tests the bunnyHop algorithms for n = 1 to n
 """
@@ -228,8 +228,8 @@ def testBunnyHop(n):
         
     print('---------------------------------------------')
 
-    plotBunnyHop(times)
-    plotBunnyHopPathCount(counts['BunnyHopDynamic'])
+    # plotBunnyHop(times)
+    # plotBunnyHopPathCount(counts['BunnyHopDynamic'])
 if __name__ == '__main__':
     if sys.argv[1] == 'test':
         if not int(sys.argv[2]):

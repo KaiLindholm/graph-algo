@@ -19,13 +19,14 @@ def findValLtXInHeap(heap, x, idx=0):
     
 def testFindValLtXInHeap():
     lst = [random.randint(0, 50) for _ in range(10)]
-    # lst = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+    
     heap = Heap(lst)
     lst1 = lst.copy()
     heapq.heapify(lst1)
     print(f'Input list: {lst1} {len(lst1)}')
-    print(f'Input min heap: {heap} {len(heap.lst)}')
+    print(f'Input min heap: {heap}')
     
-    print(findValLtXInHeap(heap, 3, 0))
+    x = 30
+    print(findValLtXInHeap(heap, x, 0))
 
 testFindValLtXInHeap()
