@@ -1,5 +1,11 @@
+"""
+All of these implementations are all brute force, but the last one 
+has an optimize path validation function
+"""
+
 import sys
 import time
+import matplotlib.pyplot as plt
 
 # find all paths that start with a 1, and end with a 0, and have equal number of 0s and 1s
 # at any given time point if the number of 1s must be greater than or equal to the number of 0s
@@ -72,10 +78,9 @@ def bunnyHopBackTrace(n):
     backtrack([], count, actualPaths, 0, 0)
     return count[0], actualPaths
 
-
 """
     Given that there are two options that can come from a given state, and the path length is k = 2n
-    The runtime complexity of this solution is O(2^k) = O(2^(2n)
+    The runtime complexity of this solution is O(2^k)
 """
 def bunnyHopBackTraceOptimized(n):
     n = 2 * n
@@ -117,6 +122,9 @@ def bunnyHopBackTraceOptimized(n):
     validPath([], count, actualPaths, 0)
     return count[0], actualPaths
 
+"""
+Prints the paths in a human readable format
+"""
 def printPaths(paths):
     # change 1 to U and -1 to D
     for path in paths:
@@ -128,37 +136,117 @@ def printPathsBalance(paths):
         print(''.join(['U' if i == 1 else 'D' for i in path[0]]))
         # print(f'Balance: {path[1]}')
         
-def testBunnyHop(n):
-    for i in range(1, n+1):
-        start_time = time.time()
-        count, _ = bunnyHopBrute(i)
-        brute_elapsed_time = time.time() - start_time
-        
-        start_time = time.time()
-        count1, _ = bunnyHopBackTrace(i)
-        backtrace_elapsed_time = time.time() - start_time
-        
-        start_time = time.time()
-        count2, _, memo = bunnyHopBackTraceOptimized(i)
-        optimized_elapsed_time = time.time() - start_time
-        print('---------------------------------------------')
-        
-        print(f'Elapsed time for n = {i}:')
-        print(f'\tbunnyHopBrute: {brute_elapsed_time} seconds')
-        print(f'\tBunnyHopBackTrace: {backtrace_elapsed_time} seconds')
-        print(f'\tbunnyHopBackTraceOptimized: {optimized_elapsed_time} seconds')
+def bunnyHopv3(n): 
+    if n == 1: 
+        return 1 
+    
+    dp = [[0 for _ in range(n)] for _ in range(n)]
+    dp[0][1] = 1
+    
+    for i in range(n):
+        dp[i][0] = 1
+    
+    for i in range(1, n):
+        for j in range(1, n):
+            # if the cells directly above are 0. Then we can skip 
+            if not (dp[i-1][j-1] == 0 and dp[i-1][j] == 0):  
+                dp[i][j] = dp[i-1][j] + dp[i][j-1]
+                
+    return dp[-1][-1]
 
-        print(f'brute_count = {count}, backtrace_v1 = {count1}, backtrace_v2 = {count2}')
+"""
+Plots the time taken for each algorithm
+"""
+def plotBunnyHop(times):
+    for algo, time in times.items():
+        if time:
+            plt.plot(time, label=algo)
         
+    plt.xlabel('n')
+    plt.ylabel('Time')
+    plt.title('Bunny Hop')
+    plt.legend()
+    plt.savefig('bunnyHop.png')
+    plt.close()
+    
+"""
+Plots the growth of the number of paths as n increases
+"""
+def plotBunnyHopPathCount(count):
+    plt.plot(count)
+
+    plt.xlabel('n')
+    plt.ylabel('Path Count')
+    plt.title('Bunny Hop')
+    plt.savefig('bunnyHopPathCount.png')
+    plt.close()
+"""
+Tests the bunnyHop algorithms for n = 1 to n
+"""
+def testBunnyHop(n):
+    times = {
+        'bunnyHopBrute': [],
+        'bunnyHopBackTrace': [],
+        'bunnyHopBackTraceOptimized': [],
+        'BunnyHopDynamic': []
+    }
+    
+    counts = {
+        'bunnyHopBrute': [],
+        'bunnyHopBackTrace': [],
+        'bunnyHopBackTraceOptimized': [],
+        'BunnyHopDynamic': []
+    }
+    
+    for i in range(1, n+1):
+        """
+            First two algorithms are my first tries and are not optimized
+            The last algorithm is the optimized version
+        """
+        # start_time = time.time()
+        # counts['bunnyHopBrute'].append(bunnyHopBrute(i)[0])
+        # times['bunnyHopBrute'].append(time.time() - start_time)
+        
+        # start_time = time.time()
+        # counts['bunnyHopBackTrace'].append(bunnyHopBackTrace(i)[0])
+        # times['bunnyHopBackTrace'].append(time.time() - start_time)
+        
+        # start_time = time.time()
+        # counts['bunnyHopBackTraceOptimized'].append(bunnyHopBackTraceOptimized(i)[0])
+        # times['bunnyHopBackTraceOptimized'].append(time.time() - start_time)
+        
+        start_time = time.time()
+        counts['BunnyHopDynamic'].append(bunnyHopv3(i))
+        times['BunnyHopDynamic'].append(time.time() - start_time)
+        
+        print('---------------------------------------------')
+        print(f'Elapsed time for n = {i}:')
+        # print(f'\tbunnyHopBackTraceOptimized: {times["bunnyHopBackTraceOptimized"][-1]} seconds')
+        print(f'\tBunnyHopDynamic: {times["BunnyHopDynamic"][-1]} seconds')
+
+        print(f'Number of paths: {counts["BunnyHopDynamic"][-1]}')
+        
+    print('---------------------------------------------')
+
+    plotBunnyHop(times)
+    plotBunnyHopPathCount(counts['BunnyHopDynamic'])
 if __name__ == '__main__':
     if sys.argv[1] == 'test':
         if not int(sys.argv[2]):
-            print('n must be less than 9')
-        else: 
-            testBunnyHop(int(sys.argv[2]))
+            print('Usage: python bunnyHop.py test <n>')
+            sys.exit(1)
+            
+        if int(sys.argv[2]) <= 0:
+            print('n must be greater than 0')
+            sys.exit(1)            
+            
+        if int(sys.argv[2]) > 11:
+            print('running the test for n > 11 will take a long time')
+        
+        testBunnyHop(int(sys.argv[2]))
     else: 
         start_time = time.time()
-        count, paths= bunnyHopBackTraceOptimized(int(sys.argv[1]))
+        count, paths = bunnyHopBackTraceOptimized(int(sys.argv[1]))
         elapsed_time = time.time() - start_time
         print(f'n = {sys.argv[1]} | Number of paths: {count}')
         print(f'Elapsed time: {elapsed_time} seconds\n')

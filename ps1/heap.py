@@ -4,42 +4,39 @@
 import sys
 class Heap: 
     def __init__(self, lst): 
-        self.lst = lst
+        self.lst = lst.copy()
         self.heapify()
         
     def swap(self, i, j): 
         heap = self.lst
         heap[i], heap[j] = heap[j], heap[i]
-        
+    """
+        O(n) heapify operation
+    """
     def heapify(self): 
         for i in range(len(self.lst)//2, -1, -1): 
             self.sift_down(i)
 
-    def sift_down(self, index, end=None):
-        
-        if end is None:
-            end = len(self.lst)
-            
+    def sift_down(self, index):
         heap = self.lst
-        
-        left_child_index = 2 * index + 1
+        size = len(heap)
         smallest = index
+        left_child = 2 * index + 1
+        right_child = 2 * index + 2
 
-        while left_child_index < end:
-            right_child_index = left_child_index + 1
+        if left_child < size and heap[left_child] < heap[smallest]:
+            smallest = left_child
 
-            if right_child_index < end and heap[right_child_index] < heap[left_child_index]:
-                smallest = right_child_index
-            else:
-                smallest = left_child_index
+        if right_child < size and heap[right_child] < heap[smallest]:
+            smallest = right_child
 
-            if heap[smallest] < heap[index]:
-                heap[index], heap[smallest] = heap[smallest], heap[index]
-                index = smallest
-                left_child_index = 2 * index + 1
-            else:
-                break
-            
+        if smallest != index:
+            self.swap(index, smallest)
+            self.sift_down(smallest)
+        
+    """
+        HOMEWORK REQUIRED
+    """
     def deleteMin(self):
         heap = self.lst
         if len(heap) == 0:
@@ -56,15 +53,24 @@ class Heap:
         while i > 0 and self.lst[i] > self.lst[self.get_parent(i)]: 
             self.swap(i, self.get_parent(i))
             i = self.get_parent(i)
-    
+    """
+        HOMEWORK REQUIRED
+        returns an increasing order list of elements in the heap
+    """
     def heap_sort(self): 
         return [self.deleteMin() for _ in range(len(self.lst))]
+    
+    def getElement(self, i):
+        return self.lst[i]
+    
+    def __str__(self):
+        return str(self.lst)    
     
 def output(output_list, sorted_list):
     with open(output_list, 'w') as file:
         for item in sorted_list:
             file.write(f'{item}\n')
-            
+     
 """
     If the script is run with no arguments, a random list of 10 integers is generated and sorted.
     

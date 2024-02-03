@@ -6,7 +6,7 @@ def cricketHop(n):
     return (1/3) + (2/3) * cricketHop(n-1)
 
 def testHopProb():
-    for i in range(100):
+    for i in range(10):
         print('n =', i, 'prob =', cricketHop(i))
         print('')
         
