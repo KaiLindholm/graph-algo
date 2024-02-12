@@ -3,9 +3,9 @@
 Requires python3
 Problem 1
 `python findMinX.py` will run with a random list of numbers and output the numbers less than the x defined. 
+
 Problem 2
 `python bunnyHop.py <n>` will print the number of paths for the input n 
-
 `python bunnyHop.py test <n>` will run and output the algorithms duration and the count for n 1 -> n 
 
 Problem 3
