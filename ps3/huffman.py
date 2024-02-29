@@ -8,7 +8,8 @@ def load_data(filename):
     heap = Heap([], comparator=lambda x, y: x < y)
     for line in lines[1:]:
         char, value = line.strip().split(':')
-        heap.insert(Node(char, float(value)))
+        newNode = Node(char, float(value))
+        heap.insert(newNode)
 
     return heap
 
@@ -37,17 +38,28 @@ def printNodes(node, val='', tree = {}):
 if __name__ == '__main__':
     
     heap = load_data('data/input.txt')
-    while len(heap) > 1:
-        print(heap.heap)
+    
+    # ensure some base order of the heap to ensure nodes that are popped as left and right are consistent
+    for i, node in enumerate(heap.heap):
+        node.order = i
         
+    while len(heap) > 1:
         left = heap.removeRoot()
         right = heap.removeRoot()
+        
+        # if the order of the left node is greater than the right node, swap them
+        # left node order will be less than right node order
+        if left.order > right.order:
+            left, right = right, left
+            
         left.huff = 0
         right.huff = 1
 
         newNode = Node(left.char + right.char, 
                         left.freq + right.freq, 
                         left, right) 
+        
+        newNode.order = left.order + right.order
 
         heap.insert(newNode)
     # printNodes(heap.heap[0])
