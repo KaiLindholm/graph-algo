@@ -6,7 +6,6 @@ class Node:
         self.left = left
         self.right = right
         self.order = None
-        self.huff = ''
         
     def __lt__(self, other):
         return self.freq < other.freq
@@ -15,7 +14,7 @@ class Node:
         return not self.left and not self.right
     
     def __repr__(self):
-        return f'{self.char}: {self.freq:.2f} {self.huff} {self.order}'
+        return f'{self.char}: {self.freq:.2f} {self.order}'
     
     
 class Heap:
