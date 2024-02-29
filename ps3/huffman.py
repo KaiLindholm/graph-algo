@@ -1,5 +1,7 @@
-import numpy as np
 from heap import Heap, Node
+
+LEFT = '0'
+RIGHT = '1'
 
 def load_data(filename): 
     with open(filename, 'r') as f:
@@ -13,32 +15,21 @@ def load_data(filename):
 
     return heap
 
-def output(output_list, huffman_tree):
+def output(output_list, encodings):
+    print(encodings)
     with open(output_list, 'w') as f:
-        for item in huffman_tree:
-            f.write(f'{(item[0])}: {item[1]}\n')
-            
-def printNodes(node, val='', tree = {}): 
-  
-    # huffman code for current node 
-    newVal = val + str(node.huff) 
-  
-    # if node is not an edge node 
-    # then traverse inside it 
-    if(node.left): 
-        printNodes(node.left, newVal, tree) 
-    if(node.right): 
-        printNodes(node.right, newVal, tree) 
-  
-        # if node is edge node then 
-        # display its huffman code 
-    if(not node.left and not node.right): 
-        tree[node.char] = newVal
-              
-if __name__ == '__main__':
-    
-    heap = load_data('data/input.txt')
-    
+        for item in encodings:
+            f.write(f"{item[0]}: {item[1]}\n")
+          
+def buildHuffmanTree(heap) -> Node:
+    """Builds a huffman tree from a heap. 
+
+    Args:
+        heap (Heap): A min heap of characters and their frequencies
+
+    Returns:
+        Node: The root of the huffman tree
+    """
     # ensure some base order of the heap to ensure nodes that are popped as left and right are consistent
     for i, node in enumerate(heap.heap):
         node.order = i
@@ -51,22 +42,51 @@ if __name__ == '__main__':
         # left node order will be less than right node order
         if left.order > right.order:
             left, right = right, left
-            
-        left.huff = 0
-        right.huff = 1
+        
+        # set the huffman code for the left and right nodes
+        left.huff = LEFT
+        right.huff = RIGHT
 
         newNode = Node(left.char + right.char, 
                         left.freq + right.freq, 
                         left, right) 
         
-        newNode.order = left.order + right.order
+        newNode.order = left.order + right.order # sum the order of the left and right nodes
 
-        heap.insert(newNode)
-    # printNodes(heap.heap[0])
+        heap.insert(newNode)  
+    return heap.removeRoot()
+        
+def get_encodings(node, val, encodings: dict): 
+    """ Gets the encodings for each char via a dfs traversal of the huffman tree
+
+    Args:
+        node (Node): The root of the huffman tree
+        val (str, optional): The base recursive step for building each node. Defaults to ''.
+        encodings (dict, optional): A dictionary of characters and their huffman code. Defaults to {}.
+    """
+    newVal = val + node.huff
+  
+    # if node is not a leaf node keep building the huffman code
+    if(node.left): 
+        get_encodings(node.left, newVal, encodings) 
+    if(node.right): 
+        get_encodings(node.right, newVal, encodings) 
+  
+    # if the node is a leaf node save the code for the char
+    if(not node.left and not node.right): 
+        encodings[node.char] = newVal
+              
+if __name__ == '__main__':
+    # load the data into a heap
+    heap = load_data('data/input.txt')
+    
+    # build the huffman tree. 
+    huffman_tree = buildHuffmanTree(heap)
+    
+    # get the encodings for each character
     encodings = {}
-    printNodes(heap.heap[0], '', encodings)
-
-    # print encodings in alphabetical order
+    get_encodings(huffman_tree, '', encodings)
+    
+    # Output the encodings in alphabetical order as per the requirements
     encodings = sorted(encodings.items(), key=lambda x: x[0])
-    for item in encodings:
-        print(f"{item[0]}: {item[1]}")
+    output('data/output.txt', encodings)
