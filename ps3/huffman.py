@@ -1,5 +1,6 @@
 from heap import Heap, Node
 import sys
+
 LEFT = '0'
 RIGHT = '1'
 
@@ -19,13 +20,14 @@ def load_data(filename):
 
     return heap
 
-def output(output_file, encodings):
+def output_data(output_file, encodings):
     """Outputs the encodings to a file"""
     try: 
         with open(output_file, 'w') as f:
             for char, code in encodings:
                 f.write(f"{char}: {code}\n")
-                
+        print(encodings)  
+             
     except FileNotFoundError:
         print(f"File \"{output_file}\" does not exist")
         sys.exit(1)
@@ -59,6 +61,7 @@ def buildHuffmanTree(heap) -> Node:
         newNode.order = left.order + right.order # sum the order of the left and right nodes
 
         heap.insert(newNode)  
+        
     return heap.removeRoot()
         
 def get_encodings(node, val, encodings: dict): 
@@ -69,16 +72,16 @@ def get_encodings(node, val, encodings: dict):
         val (str, optional): The base recursive step for building each node. Defaults to ''.
         encodings (dict, optional): A dictionary of characters and their huffman code. Defaults to {}.
     """
-    
+    # BC: if the node is a leaf node save the code for the char 
+    if(not (node.left and node.right)): 
+        encodings[node.char] = val
+        
     # if node is not a leaf node keep building the huffman code
     if(node.left): 
         get_encodings(node.left, val + LEFT, encodings) 
+        
     if(node.right): 
         get_encodings(node.right, val + RIGHT, encodings) 
-  
-    # if the node is a leaf node save the code for the char
-    if(not node.left and not node.right): 
-        encodings[node.char] = val
               
 if __name__ == '__main__':
     
@@ -101,4 +104,4 @@ if __name__ == '__main__':
     
     # Output the encodings in alphabetical order as per the requirements
     encodings = sorted(encodings.items(), key=lambda x: x[0])
-    output(output_file, encodings)
+    output_data(output_file, encodings)
